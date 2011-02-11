@@ -15,6 +15,10 @@
 <p>Les dates sont affichées en utilisant le format standard français
    (JJ-MM-AAAA).</p>
 
+<p>Il est possible d'afficher la date, le score et les électeurs pour les
+   photos coups-de-cœur en cliquant sur le petit bouton à droite du texte
+   "A été élu coup-de-cœur"</p>
+
 <h1>Version 3.3 (novembre 2010)</h1>
 
 <p>Optimisation des filtres permettant au serveur d'être plus réactif.</p>
