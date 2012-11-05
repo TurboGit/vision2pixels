@@ -929,7 +929,7 @@ package body V2P.Web_Server is
 
       Services.Web_Block.Registry.Register_Pattern_URL
         (Prefix   => Template_Defs.Page_Forum_Threads.Set.URL_PREFIX,
-         Regexp   => "([0-9]+)-.*",
+         Regexp   => "[^0-9]*([0-9]+)-.*",
          Template => Template_Defs.Page_Forum_Threads.Template,
          Data_CB  => Callbacks.Page.Forum_Threads_P'Access);
 

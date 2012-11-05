@@ -433,8 +433,19 @@ package body V2P.Callbacks.Page is
      (Request      : in              Status.Data;
       Context      : not null access Services.Web_Block.Context.Object;
       Parameters   : in              Callback_Parameters;
-      Translations : in out          Templates.Translate_Set) is
+      Translations : in out          Templates.Translate_Set)
+   is
+      URI       : constant String := Status.URI (Request);
+      From_Main : constant Boolean :=
+                    Strings.Fixed.Index (URI, "/from_main/") /= 0;
    begin
+      if From_Main then
+         V2P.Context.Not_Null_Counter.Set_Value
+           (Context => Context.all,
+            Name    => Template_Defs.Set_Global.NAV_FROM,
+            Value   => 1);
+      end if;
+
       Forum_Threads_Internal
         (Request, Context, Translations,
          Database.Id'Value (Strings.Unbounded.To_String (Parameters (1))), 0);
