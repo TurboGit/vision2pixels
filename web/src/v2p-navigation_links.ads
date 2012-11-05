@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                              Vision2Pixels                               --
 --                                                                          --
---                         Copyright (C) 2007-2009                          --
+--                         Copyright (C) 2007-2012                          --
 --                      Pascal Obry - Olivier Ramonat                       --
 --                                                                          --
 --  This library is free software; you can redistribute it and/or modify    --
@@ -36,12 +36,15 @@ package V2P.Navigation_Links is
 
    function Previous_Post
      (Context : access Services.Web_Block.Context.Object;
-      Id      : in     Positive) return Natural;
-   --  Returns previous post stored in Post_Ids.Vector
+      Id      : in     Positive;
+      Move    : in     Boolean := True) return Natural;
+   --  Returns previous post stored in Post_Ids.Vector. If Move is set to False
+   --  then the actual navigation point is not updated.
 
    function Next_Post
      (Context : access Services.Web_Block.Context.Object;
-      Id      : in      Positive) return Natural;
+      Id      : in      Positive;
+      Move    : in      Boolean := True) return Natural;
    --  Returns next post stored in Post_Ids.Vector
 
    procedure Get_Threads

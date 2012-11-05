@@ -19,6 +19,8 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
+with GNAT.IO;
+
 with Ada.Directories;
 with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
@@ -208,6 +210,11 @@ package body V2P.Callbacks.Page is
                       (Template_Defs.Set_Global.ADMIN) = "TRUE";
       Count_Visit : Boolean := True;
    begin
+      GNAT.IO.Put_Line
+        ("FEI-1: " & V2P.Context.Not_Null_Counter.Get_Value
+           (Context => Context.all,
+            Name    => Template_Defs.Set_Global.NAV_FROM)'Img);
+
       --  Set thread Id into the context
 
       V2P.Context.Counter.Set_Value
@@ -249,14 +256,25 @@ package body V2P.Callbacks.Page is
               (Request, Context, Translations);
          end if;
 
+         GNAT.IO.Put_Line
+           ("FEI-1.1: " & V2P.Context.Not_Null_Counter.Get_Value
+              (Context => Context.all,
+               Name    => Template_Defs.Set_Global.NAV_FROM)'Img);
          --  Insert navigation links (previous and next post)
 
          Insert_Links : declare
             Previous_Id : constant Database.Id :=
-                            Navigation_Links.Previous_Post (Context, TID);
+                            Navigation_Links.Previous_Post
+                              (Context, TID, Move => False);
             Next_Id     : constant Database.Id :=
-                            Navigation_Links.Next_Post (Context, TID);
+                            Navigation_Links.Next_Post
+                              (Context, TID, Move => False);
          begin
+            GNAT.IO.Put_Line
+              ("FEI-1.2: " & V2P.Context.Not_Null_Counter.Get_Value
+                 (Context => Context.all,
+                  Name    => Template_Defs.Set_Global.NAV_FROM)'Img);
+
             Templates.Insert
               (Translations, Templates.Assoc
                  (V2P.Template_Defs.Page_Forum_Entry.PREVIOUS, Previous_Id));
@@ -288,6 +306,11 @@ package body V2P.Callbacks.Page is
             end if;
          end Insert_Links;
 
+         GNAT.IO.Put_Line
+           ("FEI-2: " & V2P.Context.Not_Null_Counter.Get_Value
+              (Context => Context.all,
+               Name    => Template_Defs.Set_Global.NAV_FROM)'Img);
+
          --  Insert the entry information
 
          Templates.Insert
@@ -316,6 +339,11 @@ package body V2P.Callbacks.Page is
               (Context => Context.all,
                Name    => Template_Defs.Set_Global.FID),
             Tid => TID));
+
+      GNAT.IO.Put_Line
+        ("FEI-3: " & V2P.Context.Not_Null_Counter.Get_Value
+           (Context => Context.all,
+            Name    => Template_Defs.Set_Global.NAV_FROM)'Img);
    exception
       when Database.Parameter_Error | Constraint_Error =>
          raise Error_404;
@@ -438,17 +466,16 @@ package body V2P.Callbacks.Page is
       URI       : constant String := Status.URI (Request);
       From_Main : constant Boolean :=
                     Strings.Fixed.Index (URI, "/from_main/") /= 0;
+      From      : Natural := 0;
    begin
       if From_Main then
-         V2P.Context.Not_Null_Counter.Set_Value
-           (Context => Context.all,
-            Name    => Template_Defs.Set_Global.NAV_FROM,
-            Value   => 1);
+         From := 1;
       end if;
 
       Forum_Threads_Internal
         (Request, Context, Translations,
-         Database.Id'Value (Strings.Unbounded.To_String (Parameters (1))), 0);
+         Database.Id'Value (Strings.Unbounded.To_String (Parameters (1))),
+         From);
    end Forum_Threads_P;
 
    ----------

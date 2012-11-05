@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                                Vision2Pixels                             --
 --                                                                          --
---                           Copyright (C) 2007-2009                        --
+--                           Copyright (C) 2007-2012                        --
 --                        Pascal Obry - Olivier Ramonat                     --
 --                                                                          --
 --  This library is free software; you can redistribute it and/or modify    --
@@ -18,6 +18,8 @@
 --  along with this library; if not, write to the Free Software Foundation, --
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
+
+with GNAT.IO; use GNAT;
 
 with V2P.Context;
 with V2P.Database;
@@ -39,13 +41,15 @@ package body V2P.Navigation_Links is
       Page_Size    : in     Positive;
       From         : in     Positive;
       Mode         : in     Database.Select_Mode;
+      Move         : in     Boolean;
       Translations : in out Templates.Translate_Set);
    --  Internal version which handle all modes
 
    procedure Set_Navigation
-     (Context      : access Services.Web_Block.Context.Object;
-      Page_Size    : in     Positive;
-      From         : in     Positive);
+     (Context   : access Services.Web_Block.Context.Object;
+      Page_Size : in     Positive;
+      From      : in     Positive;
+      Move      : in     Boolean);
    --  Set only the navigation into the context
 
    -----------------
@@ -57,8 +61,10 @@ package body V2P.Navigation_Links is
       Page_Size    : in     Positive;
       From         : in     Positive;
       Mode         : in     Database.Select_Mode;
+      Move         : in     Boolean;
       Translations : in out Templates.Translate_Set)
    is
+--        pragma Unreferenced (Move);
       use Template_Defs;
       Admin     : constant Boolean :=
                     Context.Exist (Template_Defs.Set_Global.ADMIN)
@@ -71,6 +77,8 @@ package body V2P.Navigation_Links is
       Nb_Lines  : Natural;
       Total     : Natural;
    begin
+      IO.Put_Line ("F1: " & Nav_From'Img);
+
       Database.Get_Threads
         (Fid         => V2P.Context.Counter.Get_Value
            (Context => Context.all,
@@ -93,15 +101,18 @@ package body V2P.Navigation_Links is
          Total_Lines => Total,
          TZ          => Context.Get_Value (Template_Defs.Set_Global.TZ));
 
+      IO.Put_Line ("F2: " & Nav_From'Img);
       Links.Set_Value
         (Context => Context.all,
          Name    => Navigation_Links_Name,
          Value   => Nav_Links);
 
-      V2P.Context.Not_Null_Counter.Set_Value
-        (Context => Context.all,
-         Name    => Set_Global.NAV_FROM,
-         Value   => Nav_From);
+      if Move then
+         V2P.Context.Not_Null_Counter.Set_Value
+           (Context => Context.all,
+            Name    => Set_Global.NAV_FROM,
+            Value   => Nav_From);
+      end if;
 
       V2P.Context.Counter.Set_Value
         (Context => Context.all,
@@ -121,7 +132,7 @@ package body V2P.Navigation_Links is
       Translations : in out Templates.Translate_Set) is
    begin
       Get_Threads
-        (Context, Page_Size, From, Database.Everything, Translations);
+        (Context, Page_Size, From, Database.Everything, True, Translations);
    end Get_Threads;
 
    ------------------------
@@ -137,12 +148,14 @@ package body V2P.Navigation_Links is
                  (Context => Context.all,
                   Name    => Template_Defs.Set_Global.NAV_FROM);
    begin
+      IO.Put_Line ("F3: " & From'Img);
       if From + Moves < 1 then
          From := 1;
       else
          From := From + Moves;
       end if;
 
+      IO.Put_Line ("F4: " & From'Img);
       --  Update FROM counter
 
       V2P.Context.Not_Null_Counter.Set_Value
@@ -157,7 +170,8 @@ package body V2P.Navigation_Links is
 
    function Next_Post
      (Context : access Services.Web_Block.Context.Object;
-      Id      : in Positive) return Natural
+      Id      : in Positive;
+      Move    : in Boolean := True) return Natural
    is
       use Post_Ids;
       use Template_Defs;
@@ -167,6 +181,10 @@ package body V2P.Navigation_Links is
                     (Context => Context.all, Name => Navigation_Links_Name);
       Current : Cursor := Find (Posts, Id);
    begin
+      IO.Put_Line
+        ("N1: " & V2P.Context.Not_Null_Counter.Get_Value
+           (Context => Context.all,
+            Name    => Set_Global.NAV_FROM)'Img);
       if Current = No_Element then
          return 0;
       end if;
@@ -174,9 +192,15 @@ package body V2P.Navigation_Links is
       Next (Current);
 
       if Current /= No_Element then
+         IO.Put_Line ("N-nothing");
+         Context.Set_Value ("MVN", "FALSE");
          return Element (Current);
 
       else
+         IO.Put_Line
+           ("N1.1: " & V2P.Context.Not_Null_Counter.Get_Value
+              (Context => Context.all,
+               Name    => Set_Global.NAV_FROM)'Img);
          --  Try harder to find next post id
 
          Try_Harder : declare
@@ -193,13 +217,25 @@ package body V2P.Navigation_Links is
                             (Context => Context.all,
                              Name    => Set_Global.NAV_FROM);
          begin
+            IO.Put_Line
+              ("N1.2: " & V2P.Context.Not_Null_Counter.Get_Value
+                 (Context => Context.all,
+                  Name    => Set_Global.NAV_FROM)'Img);
             if Nav_From + Page_Size <= Total then
                --  Fetch more post ids
 
                Set_Navigation
                  (Context   => Context,
                   From      => Nav_From + Page_Size - 1,
-                  Page_Size => Page_Size * 2);
+                  Page_Size => Page_Size * 2,
+                  Move      => Boolean'Value (Context.Get_Value ("MVN")));
+
+               Context.Set_Value ("MVN", "TRUE");
+
+               IO.Put_Line
+                 ("N1.3: " & V2P.Context.Not_Null_Counter.Get_Value
+                    (Context => Context.all,
+                     Name    => Set_Global.NAV_FROM)'Img);
 
                --  Recursive call to Next_Post as the next element has been
                --  loaded in Links.
@@ -209,6 +245,10 @@ package body V2P.Navigation_Links is
             else
                --  End of post ids list. Abort
 
+               IO.Put_Line
+                 ("N1.4: " & V2P.Context.Not_Null_Counter.Get_Value
+                    (Context => Context.all,
+                     Name    => Set_Global.NAV_FROM)'Img);
                return 0;
             end if;
          end Try_Harder;
@@ -221,7 +261,8 @@ package body V2P.Navigation_Links is
 
    function Previous_Post
      (Context : access Services.Web_Block.Context.Object;
-      Id      : in Positive) return Natural
+      Id      : in Positive;
+      Move    : in Boolean := True) return Natural
    is
       use Post_Ids;
       use Template_Defs;
@@ -231,6 +272,11 @@ package body V2P.Navigation_Links is
                     (Context => Context.all, Name => Navigation_Links_Name);
       Current : Cursor := Find (Posts, Id);
    begin
+      IO.Put_Line
+        ("P1: " & V2P.Context.Not_Null_Counter.Get_Value
+           (Context => Context.all,
+            Name    => Set_Global.NAV_FROM)'Img);
+
       if Current = No_Element then
          return 0;
       end if;
@@ -238,6 +284,7 @@ package body V2P.Navigation_Links is
       Previous (Current);
 
       if Current /= No_Element then
+         IO.Put_Line ("P-nothing");
          return Element (Current);
 
       else
@@ -266,7 +313,8 @@ package body V2P.Navigation_Links is
                Set_Navigation
                  (Context   => Context,
                   From      => Nav_From,
-                  Page_Size => Page_Size * 2);
+                  Page_Size => Page_Size * 2,
+                  Move      => Move);
 
                --  Recursive call to Previous_Post as the previous element
                --  has been loaded in Links.
@@ -287,15 +335,16 @@ package body V2P.Navigation_Links is
    --------------------
 
    procedure Set_Navigation
-     (Context      : access Services.Web_Block.Context.Object;
-      Page_Size    : in     Positive;
-      From         : in     Positive)
+     (Context   : access Services.Web_Block.Context.Object;
+      Page_Size : in     Positive;
+      From      : in     Positive;
+      Move      : in     Boolean)
    is
       Set : Templates.Translate_Set;
    begin
       Get_Threads
         (Context, Page_Size, From,
-         Mode => Database.Navigation_Only, Translations => Set);
+         Mode => Database.Navigation_Only, Translations => Set, Move => Move);
    end Set_Navigation;
 
 end V2P.Navigation_Links;
