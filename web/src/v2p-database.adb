@@ -1349,7 +1349,7 @@ package body V2P.Database is
      (Tid        : in Id;
       Forum_Type : in V2P.Database.Forum_Type;
       TZ         : in String;
-      Admin      : in     Boolean) return Templates.Translate_Set
+      Admin      : in Boolean) return Templates.Translate_Set
    is
       function Post_Hidden return String;
       --  Returns SQL fragment with select hidden post depending on Admin
