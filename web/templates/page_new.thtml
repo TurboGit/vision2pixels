@@ -10,6 +10,12 @@
   rapports d'erreur ou des demandes de fonctionnalités. Le site ne peut
   évoluer sans vous.</p>
 
+<h1>Version 3.5.2 (avril 2013)</h1>
+
+<p>Corrige l'affichage administrateur pour la gestion du thème.</p>
+
+<p>Corrige un problème sur la dernière phase de vote pour le thème.</p>
+
 <h1>Version 3.5.1 (novembre 2012)</h1>
 
 <p>Corrige un problème lorsque le nom d'une image comporte un slash.</p>

@@ -1,7 +1,7 @@
 ###########################################################################
 #                              Vision2Pixels
 #
-#                         Copyright (C) 2006-2009
+#                         Copyright (C) 2006-2012
 #                       Pascal Obry - Olivier Ramonat
 #
 #   This library is free software; you can redistribute it and/or modify
@@ -25,7 +25,7 @@ all::
 
 # Root dir
 MODE              = Release
-JOBS              = 1
+JOBS              = 0
 BUILD_DIR         = ${shell pwd}/.build
 GNATMAKE_OPTIONS  = -XPRJ_BUILD=$(MODE)
 VALGRIND          =

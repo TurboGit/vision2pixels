@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                              Vision2Pixels                               --
 --                                                                          --
---                            Copyright (C) 2012                            --
+--                         Copyright (C) 2012-2013                          --
 --                      Pascal Obry - Olivier Ramonat                       --
 --                                                                          --
 --  This library is free software; you can redistribute it and/or modify    --
@@ -125,11 +125,14 @@ package body V2P.Database.Themes is
 
       DBH   : constant TLS_DBH_Access := TLS_DBH_Access (DBH_TLS.Reference);
       SQL   : constant String :=
-                "SELECT COUNT(user_login) AS cnt, photo_id"
-                & " FROM themes_user_votes"
-                & " WHERE stage=" & I (Stage'Pos (Current_Stage))
-                & " GROUP BY photo_id"
-                & " ORDER BY cnt DESC, photo_id ASC LIMIT 5";
+                "SELECT COUNT(user_login) AS cnt, tp.photo_id"
+                & " FROM themes_photos tp, themes_user_votes tuv"
+                & " WHERE tuv.stage=" & I (Stage'Pos (Current_Stage))
+                & "   AND tuv.photo_id=tp.photo_id"
+                & "   AND tp.theme_id=(SELECT MAX(id) FROM themes)"
+                & " GROUP BY tp.photo_id"
+                & " ORDER BY cnt DESC, tp.photo_id ASC LIMIT 5";
+
       Iter  : DB.Iterator'Class := DB_Handle.Get_Iterator;
       Line  : DB.String_Vectors.Vector;
       Count : Templates.Tag;
