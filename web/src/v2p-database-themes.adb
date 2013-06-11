@@ -597,11 +597,14 @@ package body V2P.Database.Themes is
             if Current_Stage in Stage_1 .. Stage_2 then
                declare
                   SQL  : constant String :=
-                           "SELECT COUNT(user_login) as cnt, photo_id"
-                           & " FROM themes_user_votes"
-                           & " WHERE stage=" & I (Stage'Pos (Current_Stage))
-                           & " GROUP BY photo_id"
-                           & " ORDER BY cnt DESC, photo_id ASC"
+                           "SELECT COUNT(user_login) as cnt, tuv.photo_id"
+                           & " FROM themes_user_votes tuv, themes_photos tp,"
+                           & "      themes t"
+                           & " WHERE t.stage=" & I (Stage'Pos (Current_Stage))
+                           & "   AND t.id=tp.theme_id "
+                           & "   AND tp.photo_id=tuv.photo_id"
+                           & " GROUP BY tuv.photo_id"
+                           & " ORDER BY cnt DESC, tuv.photo_id ASC"
                            & " LIMIT " & Get_Limit;
                   Iter : DB.Iterator'Class := DB_Handle.Get_Iterator;
                   Line : DB.String_Vectors.Vector;
