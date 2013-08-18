@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                              Vision2Pixels                               --
 --                                                                          --
---                         Copyright (C) 2006-2012                          --
+--                         Copyright (C) 2006-2013                          --
 --                      Pascal Obry - Olivier Ramonat                       --
 --                                                                          --
 --  This library is free software; you can redistribute it and/or modify    --
@@ -47,7 +47,8 @@ package body V2P.Settings is
       SMTP_Server, SMTP_Port, Number_Users_Listed, Default_Timezone,
       Number_CdC_Listed, RSS_Latest_Comments, RSS_Latest_Posts, Log_Level,
       Avatars_Path, Avatar_Maximum_Size, Avatars_Source_Prefix,
-      Max_Vote_Per_User, CdC_Score_Threshold, Max_Theme_Vote_Per_User);
+      Max_Vote_Per_User, CdC_Score_Threshold, Max_Theme_Vote_Per_User,
+      Red_Warning_Threshold, Orange_Warning_Threshold);
 
    package Conf is new Morzhol.Iniparser (Parameter_Name => Attributes);
 
@@ -387,6 +388,15 @@ package body V2P.Settings is
       return Conf.Get_Value (Number_Users_Listed);
    end Number_Users_Listed;
 
+   ------------------------------
+   -- Orange_Warning_Threshold --
+   ------------------------------
+
+   function Orange_Warning_Threshold return Integer is
+   begin
+      return Conf.Get_Value (Orange_Warning_Threshold);
+   end Orange_Warning_Threshold;
+
    -------------------------
    -- Posting_Delay_Hours --
    -------------------------
@@ -395,6 +405,15 @@ package body V2P.Settings is
    begin
       return Conf.Get_Value (Posting_Delay_Hours);
    end Posting_Delay_Hours;
+
+   ---------------------------
+   -- Red_Warning_Threshold --
+   ---------------------------
+
+   function Red_Warning_Threshold return Integer is
+   begin
+      return Conf.Get_Value (Red_Warning_Threshold);
+   end Red_Warning_Threshold;
 
    ------------------
    -- RSS_Host_URL --
@@ -581,6 +600,9 @@ begin --  V2P.Settings : Set default values
    Conf.Set_Value (RSS_Latest_Comments, Defaults.RSS_Latest_Comments);
    Conf.Set_Value (RSS_Latest_Posts, Defaults.RSS_Latest_Posts);
    Conf.Set_Value (CdC_Score_Threshold, Defaults.CdC_Score_Threshold);
+   Conf.Set_Value (Red_Warning_Threshold, Defaults.Red_Warning_Threshold);
+   Conf.Set_Value
+     (Orange_Warning_Threshold, Defaults.Orange_Warning_Threshold);
 
    --  Now read the config file if any
 

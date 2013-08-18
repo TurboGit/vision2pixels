@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                              Vision2Pixels                               --
 --                                                                          --
---                         Copyright (C) 2006-2012                          --
+--                         Copyright (C) 2006-2013                          --
 --                      Pascal Obry - Olivier Ramonat                       --
 --                                                                          --
 --  This library is free software; you can redistribute it and/or modify    --
@@ -126,6 +126,7 @@ with V2P.Template_Defs.Page_Rss_Last_Photos;
 with V2P.Template_Defs.Page_Rss_Last_Posts;
 with V2P.Template_Defs.Page_Theme;
 with V2P.Template_Defs.Page_Themes;
+with V2P.Template_Defs.Page_Warning_Usage;
 
 with V2P.Template_Defs.Set_Global;
 
@@ -1062,6 +1063,11 @@ package body V2P.Web_Server is
         (Template_Defs.Page_Admin_Database_Cleanup.Set.URL,
          Template_Defs.Page_Admin_Database_Cleanup.Template,
          Callbacks.Page.Admin_Database_Cleanup'Access);
+
+      Services.Web_Block.Registry.Register
+        (Template_Defs.Page_Warning_Usage.Set.URL,
+         Template_Defs.Page_Warning_Usage.Template,
+         Callbacks.Page.Warning_Usage'Access);
 
       --  Register RSS
 

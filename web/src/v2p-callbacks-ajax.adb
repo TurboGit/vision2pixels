@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                              Vision2Pixels                               --
 --                                                                          --
---                         Copyright (C) 2007-2012                          --
+--                         Copyright (C) 2007-2013                          --
 --                      Pascal Obry - Olivier Ramonat                       --
 --                                                                          --
 --  This library is free software; you can redistribute it and/or modify    --
@@ -164,6 +164,17 @@ package body V2P.Callbacks.Ajax is
             Templates.Assoc
               (Template_Defs.R_Block_Login.LOGIN,
                String'(Session.Get (SID, Template_Defs.Set_Global.LOGIN))));
+
+         Templates.Insert
+           (Translations,
+            Database.Get_User_Stats
+              (Login, Context.Get_Value (Template_Defs.Set_Global.TZ)));
+
+         Templates.Insert
+           (Translations,
+            Templates.Assoc
+              (Template_Defs.R_Block_Login.ORANGE_WARNING_RATIO,
+               Settings.Orange_Warning_Threshold));
       end if;
    end Login;
 

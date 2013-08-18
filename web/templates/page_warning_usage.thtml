@@ -1,0 +1,41 @@
+@@INCLUDE@@ set_babel.thtml
+@@--
+@@--
+@@INCLUDE@@ chunk_v2p_top.thtml @_BABEL_V2P_WEBSITE_NAME_@ alerte
+@@SET@@ SET_URL = /warning-usage
+
+<h1>Vision2Pixels - Utilisation</h1>
+
+<p>Ce message est un rappel pour le bon fonctionnement de v2p.</p>
+
+<p>Poster des images c'est bien mais commenter c'est mieux et c'est
+même la seule solution pour que ce site communautaire fonctionne
+correctement.</p>
+
+<p>Vous avez posté @_N_PHOTOS_@ photographies et vous avez donnez
+uniquement @_N_COMMENTS_@ commentaires.</p>
+
+<p>Commenter une image peut se faire sur le plan artistique et technique,
+voici quelques points pour aider à commenter:</p>
+
+<ul>
+<li>Artistique</li>
+<ul>
+<li>La composition</li>
+<li>Le rapport entre les masses dans l'images</li>
+<li>L'émotion que l'image procure</li>
+<li>Le coté humoristique dégagée</li>
+</ul>
+<li>Technique</li>
+<ul>
+<li>La mise au point</li>
+<li>La netteté</li>
+<li>Les éléments qui perturbent la lecture</li>
+<li>La beauté du bokey</li>
+<li>L'harmonie des couleurs</li>
+<li>L'équilibre des tonalitées</li>
+</ul>
+</ul>
+
+@@--
+@@INCLUDE@@ chunk_v2p_end.thtml

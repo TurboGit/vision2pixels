@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                              Vision2Pixels                               --
 --                                                                          --
---                         Copyright (C) 2007-2012                          --
+--                         Copyright (C) 2007-2013                          --
 --                      Pascal Obry - Olivier Ramonat                       --
 --                                                                          --
 --  This library is free software; you can redistribute it and/or modify    --
@@ -927,6 +927,25 @@ package body V2P.Callbacks.Page is
               (Template_Defs.Page_Validate_User.ERROR, True));
       end if;
    end Validate_User;
+
+   -------------------
+   -- Warning_Usage --
+   -------------------
+
+   procedure Warning_Usage
+     (Request      : in              Status.Data;
+      Context      : not null access Services.Web_Block.Context.Object;
+      Translations : in out          Templates.Translate_Set)
+   is
+      pragma Unreferenced (Request);
+      Login : constant String :=
+                Context.Get_Value (Template_Defs.Set_Global.LOGIN);
+   begin
+      Templates.Insert
+        (Translations,
+         Database.Get_User_Stats
+           (Login, Context.Get_Value (Template_Defs.Set_Global.TZ)));
+   end Warning_Usage;
 
    ----------------
    -- Week_Votes --

@@ -1,9 +1,9 @@
 @@INCLUDE@@ set_babel.thtml
 @@--
 <?xml version="1.0" encoding="utf-8"?>
+<response>
 @@IF@@ @_LOGIN_@ = ""
 @@-- Login failed
-<response>
    <replace id="bl_login_err">@_BABEL_LOGIN_FAILED_@</replace>
    <apply_style id="bl_login_err">
      <attribute id="display" value="block"/>
@@ -16,8 +16,11 @@
    </apply_style>
 </response>
 @@ELSE@@
+@@IF@@ @_N_PHOTOS_@ > 0 AND @_"/"(N_PHOTOS):N_COMMENTS_@ < @_ORANGE_WARNING_RATIO_@
+   <location url="/warning-usage"/>
+@@ELSE@@
 @@-- Login OK
-<response>
    <refresh/>
-</response>
 @@END_IF@@
+@@END_IF@@
+</response>
