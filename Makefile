@@ -1,7 +1,7 @@
 ###########################################################################
 #                              Vision2Pixels
 #
-#                         Copyright (C) 2006-2012
+#                         Copyright (C) 2006-2013
 #                       Pascal Obry - Olivier Ramonat
 #
 #   This library is free software; you can redistribute it and/or modify
@@ -290,6 +290,10 @@ install-distrib:
 	$(TAR_DIR) $(shell basename $(DISTRIB)).tgz \
 		$(shell basename $(DISTRIB))
 	$(RM) -r $(DISTRIB)
+
+archive:
+	git archive --format=tar --prefix=v2p/ HEAD > v2p-src-$(VERSION_ALL).tar
+	bzip2 -9  v2p-src-$(VERSION_ALL).tar
 
 ext_lib:
 	$(MAKE) -C image/lib_ext
