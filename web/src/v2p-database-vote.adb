@@ -452,7 +452,7 @@ package body V2P.Database.Vote is
         (Iter, "SELECT DISTINCT(week_id), elected_on"
          & " FROM photo_of_the_week p, user_photo_of_the_week u"
          & " WHERE u.post_id=" & To_String (Tid)
-         & " AND week_id!=0 AND week_id=p.id"
+         & " AND week_id!=0 AND week_id=p.id AND u.post_id!=p.post_id"
          & " ORDER BY week_id DESC");
 
       while Iter.More loop

@@ -115,7 +115,7 @@
       </div>
       @@-- Vote photo of the week (only for photo forum)
       @@IF@@ @_CDC_@ /= ""
-        <div id="pfe_cdc"><a href="/votes/@_CDC_@" id="pfe_cdclink" title="@_BABEL_YOUR_CDC_@">&hearts;</a>&nbsp;
+        <div id="pfe_cdc"><a href="/cdc" id="pfe_cdclink" title="@_BABEL_YOUR_CDC_@">&hearts;</a>&nbsp;
            <a href="#cdcdata" id="pfe_toggle_cdcdata" class="link"
               rel="pfe_cdcdata_table">@_BABEL_HAS_BEEN_CDC_@&nbsp;<span id="pfe_symbol">@_BABEL_SYM_CLOSED_@</span></a>
            @@INCLUDE@@ ../we_js/chunk_show_hide.tjs pfe pfe_cdcdata_table pfe_symbol
@@ -127,7 +127,8 @@
       @@ELSE@@
         <div id="pfe_lazy_vote_week_photo">@_LAZY_VOTE_WEEK_PHOTO_@</div>
       @@END_IF@@
-      @@IF@@ @_NOMINATED_@ > 0
+      @@--  Do not display is CdC and nominated once (this is already part of the CdC data above
+      @@IF@@ (@_CDC_@ = "" and @_NOMINATED_@ = 1) or (@_NOMINATED_@ > 1)
          @_LAZY_NOMINATED_DATA_@
       @@END_IF@@
     @@END_IF@@

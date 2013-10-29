@@ -1392,7 +1392,7 @@ package body V2P.Database is
             & " hour') - JULIANDAY('NOW')) * 24, category.name, category.id, "
             & "(SELECT id FROM photo_of_the_week AS cdc "
             & " WHERE cdc.post_id=post.id), DATE('now')>disabled_since, "
-            & "(SELECT COUNT(*) FROM user_photo_of_the_week q "
+            & "(SELECT COUNT(DISTINCT(week_id)) FROM user_photo_of_the_week q "
             & " WHERE q.post_id=post.id AND week_id!=0) "
             & "FROM post, user, user_post, photo, category "
             & "WHERE post.id=" & To_String (Tid)

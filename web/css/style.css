@@ -800,6 +800,15 @@ h2#pfe_comments_section {
     color: #e0e0ff;
 }
 
+#bcd_data {
+    padding-bottom: 8px;
+}
+
+#bnom_data {
+    padding-top: 2px;
+    font-size: 80%;
+}
+
 fieldset#pfnpe_mandatory_fields {
     -moz-border-radius:12px 12px 12px 12px;
     margin: 1em;
