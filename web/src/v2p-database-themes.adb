@@ -663,7 +663,7 @@ package body V2P.Database.Themes is
 
             DBH.Handle.Execute
               ("UPDATE themes SET stage=stage+1"
-               & " WHERE stage=" & I (Stage'Pos (Current_Stage)));
+               & " WHERE id=" & I (Current_Theme));
             C_Stage := Stage'Succ (C_Stage);
 
             DBH.Handle.Commit;
