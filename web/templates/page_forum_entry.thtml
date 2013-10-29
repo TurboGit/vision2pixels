@@ -127,7 +127,8 @@
       @@ELSE@@
         <div id="pfe_lazy_vote_week_photo">@_LAZY_VOTE_WEEK_PHOTO_@</div>
       @@END_IF@@
-      @@IF@@ @_NOMINATED_@ > 0
+      @@--  Do not display is CdC and nominated once (this is already part of the CdC data above
+      @@IF@@ (@_CDC_@ = "" and @_NOMINATED_@ = 1) or (@_NOMINATED_@ > 1)
          @_LAZY_NOMINATED_DATA_@
       @@END_IF@@
     @@END_IF@@
