@@ -2654,7 +2654,7 @@ package body V2P.Database is
       --  Count nb results
 
       declare
-         SQL : constant String := "SELECT COUNT(*) from user";
+         SQL : constant String := "SELECT COUNT(*) FROM user";
       begin
          DBH.Handle.Prepare_Select (Iter, SQL);
          if Iter.More then
